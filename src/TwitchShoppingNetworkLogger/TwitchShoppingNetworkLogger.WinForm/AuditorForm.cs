@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using TwitchShoppingNetworkLogger.Auditor.Binding;
 using TwitchShoppingNetworkLogger.Auditor.Impl;
 using TwitchShoppingNetworkLogger.Auditor.Interfaces;
 using TwitchShoppingNetworkLogger.Config;
@@ -12,12 +13,14 @@ namespace TwitchShoppingNetworkLogger.WinForm
         private ListWhisperRepository _repository;
         private IUser _loggedInUser;
         private Guid _currentSession;
-        
+
+        private BindingListInvoked<ListUserModel> _boundUsers;
+
         public AuditorForm(string username, string oAuthToken)
         {
             InitializeComponent();
 
-            _repository = new ListWhisperRepository();
+            _repository = new ListWhisperRepository(usersListBox, dataGridView1);
 
             var userRepository = new UserRepository(ConfigManager.Instance);
             _auditor = new AuditorRegistry(userRepository).RegisterNewWhisperAuditor(username, oAuthToken, _repository);
@@ -42,7 +45,10 @@ namespace TwitchShoppingNetworkLogger.WinForm
         private void usersListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             var currentUser = (ListUserModel) usersListBox.SelectedItem;
-            dataGridView1.DataSource = _repository.GetWhisperListBySessionAndUser(_currentSession.ToString().ToLower(), currentUser.UserId);
+            if (currentUser != null)
+                dataGridView1.DataSource = _repository.GetWhisperListBySessionAndUser(_currentSession.ToString().ToLower(), currentUser.UserId);
+            else
+                dataGridView1.DataSource = null;
         }
 
         private void startStopButton_Click(object sender, EventArgs e)
@@ -57,9 +63,13 @@ namespace TwitchShoppingNetworkLogger.WinForm
                 _auditor.StartAuditing();
                 _currentSession = _auditor.CurrentSessionId;
                 startStopButton.Text = "Stop Logging";
-
-                usersListBox.DataSource = _repository.GetUserListBySession(_currentSession.ToString().ToLower());
+                
+                _boundUsers = _repository.GetUserListBySession(_currentSession.ToString().ToLower());
                 usersListBox.ClearSelected();
+                usersListBox.DataSource = _boundUsers;
+                usersListBox.DisplayMember = "Username";
+                usersListBox.ValueMember = "UserId";
+                usersListBox.Refresh();
             }
         }
 

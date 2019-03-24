@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using TwitchShoppingNetworkLogger.Auditor.Binding;
 using TwitchShoppingNetworkLogger.Auditor.Interfaces;
 
 namespace TwitchShoppingNetworkLogger.Auditor.Impl
@@ -20,18 +22,23 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
 
     public class ListWhisperRepository : IWhisperRepository
     {
-        private IDictionary<string, List<ListUserModel>> _userListsBySession;
-        private IDictionary<string, IDictionary<string, List<ListWhisperModel>>> _messageListsBySessionAndUser;
+        private ISynchronizeInvoke _userInvoke;
+        private ISynchronizeInvoke _whisperInvoke;
 
-        public ListWhisperRepository()
+        private IDictionary<string, BindingListInvoked<ListUserModel>> _userListsBySession;
+        private IDictionary<string, IDictionary<string, BindingListInvoked<ListWhisperModel>>> _messageListsBySessionAndUser;
+
+        public ListWhisperRepository(ISynchronizeInvoke userListInvoke, ISynchronizeInvoke whisperListInvoke)
         {
-            _userListsBySession = new Dictionary<string, List<ListUserModel>>();
-            _messageListsBySessionAndUser = new Dictionary<string, IDictionary<string, List<ListWhisperModel>>>();
+            _userInvoke = userListInvoke;
+            _whisperInvoke = whisperListInvoke;
+            _userListsBySession = new Dictionary<string, BindingListInvoked<ListUserModel>>();
+            _messageListsBySessionAndUser = new Dictionary<string, IDictionary<string, BindingListInvoked<ListWhisperModel>>>();
         }
 
         public void LogWhisper(IWhisperMessage whisper)
         {
-            List<ListUserModel> users = GetUserListBySession(whisper.SessionId);
+            var users = GetUserListBySession(whisper.SessionId);
             if (!users.Any(n => n.UserId == whisper.FromUserId))
             {
                 users.Add(new ListUserModel()
@@ -42,7 +49,7 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
                 });
             }
 
-            List<ListWhisperModel> whispers = GetWhisperListBySessionAndUser(whisper.SessionId, whisper.FromUserId);
+            var whispers = GetWhisperListBySessionAndUser(whisper.SessionId, whisper.FromUserId);
             whispers.Add(new ListWhisperModel()
             {
                 TimeReceived = whisper.TimeReceived,
@@ -50,19 +57,19 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
             });
         }
 
-        public List<ListUserModel> GetUserListBySession(string sessionId)
+        public BindingListInvoked<ListUserModel> GetUserListBySession(string sessionId)
         {
             if (!_userListsBySession.ContainsKey(sessionId))
-                _userListsBySession.Add(sessionId, new List<ListUserModel>());
+                _userListsBySession.Add(sessionId, new BindingListInvoked<ListUserModel>(_userInvoke));
             return _userListsBySession[sessionId];
         }
 
-        public List<ListWhisperModel> GetWhisperListBySessionAndUser(string sessionId, string userId)
+        public BindingListInvoked<ListWhisperModel> GetWhisperListBySessionAndUser(string sessionId, string userId)
         {
             if (!_messageListsBySessionAndUser.ContainsKey(sessionId))
-                _messageListsBySessionAndUser.Add(sessionId, new Dictionary<string, List<ListWhisperModel>>());
+                _messageListsBySessionAndUser.Add(sessionId, new Dictionary<string, BindingListInvoked<ListWhisperModel>>());
             if (!_messageListsBySessionAndUser[sessionId].ContainsKey(userId))
-                _messageListsBySessionAndUser[sessionId].Add(userId, new List<ListWhisperModel>());
+                _messageListsBySessionAndUser[sessionId].Add(userId, new BindingListInvoked<ListWhisperModel>(_whisperInvoke));
             return _messageListsBySessionAndUser[sessionId][userId];
         }
     }
