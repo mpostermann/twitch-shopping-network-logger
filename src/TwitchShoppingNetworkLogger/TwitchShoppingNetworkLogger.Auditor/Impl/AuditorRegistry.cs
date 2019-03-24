@@ -38,6 +38,7 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
                 var auditor = GetRegisteredWhisperAuditor(username);
                 if (auditor.IsAuditing())
                     auditor.EndAuditing();
+                _auditors.Remove(username);
             }
         }
 

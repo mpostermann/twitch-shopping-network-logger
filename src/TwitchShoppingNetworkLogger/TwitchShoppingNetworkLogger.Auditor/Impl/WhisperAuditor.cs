@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Timers;
 using Logging;
-using TwitchLib.Api.Helix.Models.Users;
 using TwitchLib.Client;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
