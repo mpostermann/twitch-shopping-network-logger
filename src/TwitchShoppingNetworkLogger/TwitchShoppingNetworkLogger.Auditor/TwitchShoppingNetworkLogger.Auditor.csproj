@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="TwitchLib" Version="3.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TwitchShoppingNetworkLogger.Logging\TwitchShoppingNetworkLogger.Logging.csproj" />
+    <ProjectReference Include="..\TwitchShoppingNetworkLogger.Config\TwitchShoppingNetworkLogger.Config.csproj" />
+  </ItemGroup>
+
+</Project>

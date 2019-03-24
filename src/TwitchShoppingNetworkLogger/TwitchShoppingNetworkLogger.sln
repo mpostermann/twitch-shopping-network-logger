@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.489
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TwitchShoppingNetworkLogger.Logging", "TwitchShoppingNetworkLogger.Logging\TwitchShoppingNetworkLogger.Logging.csproj", "{A801D405-8B47-4BAD-8B61-0746B742F73B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TwitchShoppingNetworkLogger.Auditor", "TwitchShoppingNetworkLogger.Auditor\TwitchShoppingNetworkLogger.Auditor.csproj", "{FF1AF9C1-A62B-4436-94B7-059B42D665B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitchShoppingNetworkLogger.WebApi", "TwitchShoppingNetworkLogger.WebApi\TwitchShoppingNetworkLogger.WebApi.csproj", "{4319C961-3250-4ECB-82B7-D39066F5DC7B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitchShoppingNetworkLogger.Config", "TwitchShoppingNetworkLogger.Config\TwitchShoppingNetworkLogger.Config.csproj", "{4EC6C225-C26D-439C-96B8-FB7BB23A1BCE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A801D405-8B47-4BAD-8B61-0746B742F73B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A801D405-8B47-4BAD-8B61-0746B742F73B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A801D405-8B47-4BAD-8B61-0746B742F73B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A801D405-8B47-4BAD-8B61-0746B742F73B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF1AF9C1-A62B-4436-94B7-059B42D665B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF1AF9C1-A62B-4436-94B7-059B42D665B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF1AF9C1-A62B-4436-94B7-059B42D665B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF1AF9C1-A62B-4436-94B7-059B42D665B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4319C961-3250-4ECB-82B7-D39066F5DC7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4319C961-3250-4ECB-82B7-D39066F5DC7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4319C961-3250-4ECB-82B7-D39066F5DC7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4319C961-3250-4ECB-82B7-D39066F5DC7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4EC6C225-C26D-439C-96B8-FB7BB23A1BCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EC6C225-C26D-439C-96B8-FB7BB23A1BCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EC6C225-C26D-439C-96B8-FB7BB23A1BCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EC6C225-C26D-439C-96B8-FB7BB23A1BCE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {35EB7957-0715-4AB3-90B0-1D94AE589F7E}
+	EndGlobalSection
+EndGlobal
