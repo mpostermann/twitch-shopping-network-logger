@@ -24,7 +24,7 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
         {
             get
             {
-                if (_currentSession == null)
+                if (_currentSession != null)
                     return new Guid(_currentSession.Id);
                 return Guid.Empty;
             }
