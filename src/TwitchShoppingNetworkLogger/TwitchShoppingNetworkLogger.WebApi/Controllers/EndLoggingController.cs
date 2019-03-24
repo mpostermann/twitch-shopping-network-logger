@@ -13,12 +13,12 @@ namespace TwitchShoppingNetworkLogger.WebApi.Controllers
     public class EndLoggingController : TSNControllerBase
     {
         private IUserRepository _userRepository;
-        private IAuditorFactory _auditorFactory;
+        private IAuditorRegistry _auditorRegistry;
 
         public EndLoggingController()
         {
             _userRepository = new UserRepository(ConfigManager.Instance);
-            _auditorFactory = new AuditorFactory(_userRepository);
+            _auditorRegistry = new AuditorRegistry(_userRepository);
         }
 
         [HttpPut]
@@ -27,7 +27,7 @@ namespace TwitchShoppingNetworkLogger.WebApi.Controllers
             try {
                 LoggerManager.Instance.LogDebug("Received request.", request.Username);
 
-                var auditor = _auditorFactory.GetWhisperAuditor(request.Username, request.Token);
+                var auditor = _auditorRegistry.GetRegisteredWhisperAuditor(request.Username);
 
                 EndAuditing(request.Username, auditor);
                 return "Success";
