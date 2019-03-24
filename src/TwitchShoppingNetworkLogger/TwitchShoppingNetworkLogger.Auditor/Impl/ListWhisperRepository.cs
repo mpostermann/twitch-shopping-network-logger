@@ -28,6 +28,11 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
         private IDictionary<string, BindingListInvoked<ListUserModel>> _userListsBySession;
         private IDictionary<string, IDictionary<string, BindingListInvoked<ListWhisperModel>>> _messageListsBySessionAndUser;
 
+        public ListWhisperRepository() :
+            this(null, null)
+        {
+        }
+
         public ListWhisperRepository(ISynchronizeInvoke userListInvoke, ISynchronizeInvoke whisperListInvoke)
         {
             _userInvoke = userListInvoke;

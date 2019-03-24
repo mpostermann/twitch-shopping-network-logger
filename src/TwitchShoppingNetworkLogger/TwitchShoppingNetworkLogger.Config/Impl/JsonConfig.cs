@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Logging;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using TwitchShoppingNetworkLogger.Config.Data;
 using TwitchShoppingNetworkLogger.Config.Interfaces;
 
 namespace TwitchShoppingNetworkLogger.Config.Impl
@@ -21,5 +20,6 @@ namespace TwitchShoppingNetworkLogger.Config.Impl
 
         public string TwitchClientKey => _config["TwitchClientKey"].Value<string>();
         public ICollection<string> AuthorizedUsers => _config["AuthorizedUsers"].ToObject<string[]>();
+        public DatabaseConnection DatabaseConnection => _config["DatabaseConnection"].ToObject<DatabaseConnection>();
     }
 }
