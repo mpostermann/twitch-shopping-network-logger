@@ -6,6 +6,7 @@ using TwitchLib.Client.Models;
 using TwitchLib.Communication.Clients;
 using TwitchLib.Communication.Models;
 using TwitchShoppingNetworkLogger.Auditor.Interfaces;
+using WhisperMessage = TwitchShoppingNetworkLogger.Auditor.Models.WhisperMessage;
 
 namespace TwitchShoppingNetworkLogger.Auditor.Impl
 {
@@ -15,16 +16,26 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
 
         private TwitchClient _client;
         private IWhisperRepository _repository;
+        private ISession _currentSession;
 
         public readonly IUser User;
-        public Guid CurrentSessionId { get; private set; }
+
+        public Guid CurrentSessionId
+        {
+            get
+            {
+                if (_currentSession == null)
+                    return new Guid(_currentSession.Id);
+                return Guid.Empty;
+            }
+        }
 
         public WhisperAuditor(IUser user, string oAuthToken, IWhisperRepository repository)
         {
             _repository = repository;
             User = user;
             _oAuthToken = oAuthToken;
-            CurrentSessionId = Guid.Empty;
+            _currentSession = null;
 
             // TODO: Wrap TwitchClient in our own interface so we can unit test it
             var clientOptions = new ClientOptions {
@@ -72,13 +83,14 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
         public void StartAuditing()
         {
             _client.Connect();
-            CurrentSessionId = Guid.NewGuid();
+            _currentSession = _repository.CreateSessionForUser(User.Id);
         }
 
         public void EndAuditing()
         {
             _client.Disconnect();
-            CurrentSessionId = Guid.Empty;
+            _repository.CloseSession(_currentSession.ToString().ToLower());
+            _currentSession = null;
         }
     }
 }

@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TwitchShoppingNetworkLogger.Db.Interfaces\TwitchShoppingNetworkLogger.Db.Interfaces.csproj" />
     <ProjectReference Include="..\TwitchShoppingNetworkLogger.Logging\TwitchShoppingNetworkLogger.Logging.csproj" />
     <ProjectReference Include="..\TwitchShoppingNetworkLogger.Auditor\TwitchShoppingNetworkLogger.Auditor.csproj" />
     <ProjectReference Include="..\TwitchShoppingNetworkLogger.Config\TwitchShoppingNetworkLogger.Config.csproj" />

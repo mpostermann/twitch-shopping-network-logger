@@ -5,10 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.15" />
+    <PackageReference Include="MySql.Data.EntityFrameworkCore.Design" Version="8.0.15" />
     <PackageReference Include="TwitchLib" Version="3.0.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TwitchShoppingNetworkLogger.Db.Interfaces\TwitchShoppingNetworkLogger.Db.Interfaces.csproj" />
     <ProjectReference Include="..\TwitchShoppingNetworkLogger.Logging\TwitchShoppingNetworkLogger.Logging.csproj" />
     <ProjectReference Include="..\TwitchShoppingNetworkLogger.Config\TwitchShoppingNetworkLogger.Config.csproj" />
   </ItemGroup>

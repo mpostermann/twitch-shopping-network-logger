@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using TwitchShoppingNetworkLogger.Auditor.Binding;
 using TwitchShoppingNetworkLogger.Auditor.Interfaces;
+using TwitchShoppingNetworkLogger.Auditor.Models;
 
 namespace TwitchShoppingNetworkLogger.Auditor.Impl
 {
@@ -39,6 +40,16 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
             _whisperInvoke = whisperListInvoke;
             _userListsBySession = new Dictionary<string, BindingListInvoked<ListUserModel>>();
             _messageListsBySessionAndUser = new Dictionary<string, IDictionary<string, BindingListInvoked<ListWhisperModel>>>();
+        }
+
+        public ISession CreateSessionForUser(string userId)
+        {
+            return new Session(userId);
+        }
+
+        public void CloseSession(string sessionId)
+        {
+            // do nothing
         }
 
         public void LogWhisper(IWhisperMessage whisper)

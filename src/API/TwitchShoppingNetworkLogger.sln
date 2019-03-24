@@ -13,6 +13,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TwitchShoppingNetworkLogger
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitchShoppingNetworkLogger.WinForm", "TwitchShoppingNetworkLogger.WinForm\TwitchShoppingNetworkLogger.WinForm.csproj", "{7136C85C-D573-4568-8AED-B5B6C2866A93}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitchShoppingNetworkLogger.Db.Interfaces", "TwitchShoppingNetworkLogger.Db.Interfaces\TwitchShoppingNetworkLogger.Db.Interfaces.csproj", "{284E21B1-1A06-4B6B-9F86-77B4B9FA494D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitchShoppingNetworkLogger.Db.Migrate", "TwitchShoppingNetworkLogger.Db.Migrate\TwitchShoppingNetworkLogger.Db.Migrate.csproj", "{C0091C85-DF79-4A6B-9E8E-E83635508855}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{7136C85C-D573-4568-8AED-B5B6C2866A93}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7136C85C-D573-4568-8AED-B5B6C2866A93}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7136C85C-D573-4568-8AED-B5B6C2866A93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{284E21B1-1A06-4B6B-9F86-77B4B9FA494D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{284E21B1-1A06-4B6B-9F86-77B4B9FA494D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{284E21B1-1A06-4B6B-9F86-77B4B9FA494D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{284E21B1-1A06-4B6B-9F86-77B4B9FA494D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0091C85-DF79-4A6B-9E8E-E83635508855}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0091C85-DF79-4A6B-9E8E-E83635508855}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0091C85-DF79-4A6B-9E8E-E83635508855}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0091C85-DF79-4A6B-9E8E-E83635508855}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

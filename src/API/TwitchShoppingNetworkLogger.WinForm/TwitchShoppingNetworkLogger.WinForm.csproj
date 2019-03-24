@@ -208,6 +208,10 @@
       <Project>{4ec6c225-c26d-439c-96b8-fb7bb23a1bce}</Project>
       <Name>TwitchShoppingNetworkLogger.Config</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TwitchShoppingNetworkLogger.Db.Interfaces\TwitchShoppingNetworkLogger.Db.Interfaces.csproj">
+      <Project>{284e21b1-1a06-4b6b-9f86-77b4b9fa494d}</Project>
+      <Name>TwitchShoppingNetworkLogger.Db.Interfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TwitchShoppingNetworkLogger.Logging\TwitchShoppingNetworkLogger.Logging.csproj">
       <Project>{a801d405-8b47-4bad-8b61-0746b742f73b}</Project>
       <Name>TwitchShoppingNetworkLogger.Logging</Name>

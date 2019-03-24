@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using TwitchLib.Api;
 using TwitchShoppingNetworkLogger.Auditor.Interfaces;
+using TwitchShoppingNetworkLogger.Auditor.Models;
 using TwitchShoppingNetworkLogger.Config.Interfaces;
+using TwitchShoppingNetworkLogger.Db.Interfaces;
 
 namespace TwitchShoppingNetworkLogger.Auditor.Impl
 {
@@ -12,10 +14,21 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
         private string _clientKey;
         private string[] _authorizedUsers;
 
-        public UserRepository(IConfig config)
+        public UserRepository(IConfig config, IDbContext dbContext)
         {
             _clientKey = config.TwitchClientKey;
-            _authorizedUsers = config.AuthorizedUsers.ToArray();
+            _authorizedUsers = GetAuthorizedUsers(dbContext);
+        }
+
+        private static string[] GetAuthorizedUsers(IDbContext dbContext)
+        {
+            var users = dbContext.Get<AuthorizedUser>(new object());
+
+            var retVal = new List<string>();
+            foreach (var user in users)
+                retVal.Add(user.Username);
+
+            return retVal.ToArray();
         }
 
         public IUser GetUserByUsername(string username)
