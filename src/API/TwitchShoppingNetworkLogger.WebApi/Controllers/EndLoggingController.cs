@@ -18,7 +18,7 @@ namespace TwitchShoppingNetworkLogger.WebApi.Controllers
         public EndLoggingController()
         {
             _userRepository = new UserRepository(ConfigManager.Instance, null);
-            _auditorRegistry = new AuditorRegistry(_userRepository);
+            _auditorRegistry = new AuditorRegistry(_userRepository, ConfigManager.Instance);
         }
 
         [HttpPut]

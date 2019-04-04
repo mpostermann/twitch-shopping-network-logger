@@ -6,5 +6,6 @@ namespace TwitchShoppingNetworkLogger.Auditor.Interfaces
         ISession CreateSessionForUser(string userId);
         void CloseSession(string sessionId);
         void LogWhisper(IWhisperMessage whisper);
+        bool HasUserWhisperedYet(string userId, string sessionId);
     }
 }

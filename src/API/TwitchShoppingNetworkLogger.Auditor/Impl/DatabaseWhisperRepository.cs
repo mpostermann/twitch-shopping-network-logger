@@ -73,6 +73,12 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
             }
         }
 
+        public bool HasUserWhisperedYet(string userId, string sessionId)
+        {
+            // TODO: Complete implementation of this
+            throw new NotImplementedException();
+        }
+
         private async Task InsertIntoDatabaseIfNotAlreadyExistsAsync<T>(T model, string id)
         {
             try

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using TwitchShoppingNetworkLogger.Auditor.Interfaces;
+using TwitchShoppingNetworkLogger.Config.Interfaces;
 
 namespace TwitchShoppingNetworkLogger.Auditor.Impl
 {
@@ -8,10 +9,12 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
         private static readonly IDictionary<string, IWhisperAuditor> _auditors = new Dictionary<string, IWhisperAuditor>();
 
         private readonly IUserRepository _userRepository;
+        private readonly IConfig _config;
 
-        public AuditorRegistry(IUserRepository userRepository)
+        public AuditorRegistry(IUserRepository userRepository, IConfig config)
         {
             _userRepository = userRepository;
+            _config = config;
         }
         
         public bool HasRegisteredWhisperAuditor(string username)
@@ -46,7 +49,7 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
         {
             if (_userRepository.IsUserAuthorized(username)) {
                 var user = _userRepository.GetUserByUsername(username);
-                _auditors.Add(username, new WhisperAuditor(user, oAuthToken, repository));
+                _auditors.Add(username, new WhisperAuditor(user, oAuthToken, repository, _config));
             }
         }
     }

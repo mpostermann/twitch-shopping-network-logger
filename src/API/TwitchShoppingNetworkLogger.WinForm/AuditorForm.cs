@@ -23,7 +23,7 @@ namespace TwitchShoppingNetworkLogger.WinForm
             _repository = new ListWhisperRepository(usersListBox, dataGridView1);
 
             var userRepository = new UserRepository(ConfigManager.Instance, null);
-            _auditor = new AuditorRegistry(userRepository).RegisterNewWhisperAuditor(username, oAuthToken, _repository);
+            _auditor = new AuditorRegistry(userRepository, ConfigManager.Instance).RegisterNewWhisperAuditor(username, oAuthToken, _repository);
             _loggedInUser = userRepository.GetUserByUsername(username);
         }
 

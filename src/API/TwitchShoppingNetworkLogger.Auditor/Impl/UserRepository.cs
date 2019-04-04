@@ -17,7 +17,10 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
         public UserRepository(IConfig config, IDbContext dbContext)
         {
             _clientKey = config.TwitchClientKey;
-            _authorizedUsers = GetAuthorizedUsers(dbContext);
+
+            // TODO: Load authorized users from the database once implemented
+            //_authorizedUsers = GetAuthorizedUsers(dbContext);
+            _authorizedUsers = GetAuthorizedUsersFromConfig(config);
         }
 
         private static string[] GetAuthorizedUsers(IDbContext dbContext)
@@ -29,6 +32,11 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
                 retVal.Add(user.Username);
 
             return retVal.ToArray();
+        }
+
+        private static string[] GetAuthorizedUsersFromConfig(IConfig config)
+        {
+            return config.AuthorizedUsers.ToArray();
         }
 
         public IUser GetUserByUsername(string username)

@@ -73,6 +73,12 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
             });
         }
 
+        public bool HasUserWhisperedYet(string userId, string sessionId)
+        {
+            var users = GetUserListBySession(sessionId);
+            return users.Any(n => n.UserId == userId);
+        }
+
         public BindingListInvoked<ListUserModel> GetUserListBySession(string sessionId)
         {
             if (!_userListsBySession.ContainsKey(sessionId))

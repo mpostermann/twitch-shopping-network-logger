@@ -6,6 +6,7 @@ using TwitchLib.Client.Models;
 using TwitchLib.Communication.Clients;
 using TwitchLib.Communication.Models;
 using TwitchShoppingNetworkLogger.Auditor.Interfaces;
+using TwitchShoppingNetworkLogger.Config.Interfaces;
 using WhisperMessage = TwitchShoppingNetworkLogger.Auditor.Models.WhisperMessage;
 
 namespace TwitchShoppingNetworkLogger.Auditor.Impl
@@ -17,6 +18,7 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
         private TwitchClient _client;
         private IWhisperRepository _repository;
         private ISession _currentSession;
+        private readonly string _firstWhisperResponse;
 
         public readonly IUser User;
 
@@ -30,9 +32,10 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
             }
         }
 
-        public WhisperAuditor(IUser user, string oAuthToken, IWhisperRepository repository)
+        public WhisperAuditor(IUser user, string oAuthToken, IWhisperRepository repository, IConfig config)
         {
             _repository = repository;
+            _firstWhisperResponse = config.FirstWhisperResponse;
             User = user;
             _oAuthToken = oAuthToken;
             _currentSession = null;
@@ -72,7 +75,39 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
                 e.WhisperMessage.Username,
                 CurrentSessionId.ToString().ToLower(),
                 e.WhisperMessage.Message);
-            _repository.LogWhisper(whisper);
+
+            MessageUserIfFirstWhisper(whisper.FromUserId, whisper.FromUsername, whisper.SessionId);
+            LogWhisper(whisper);
+        }
+
+        private void MessageUserIfFirstWhisper(string userId, string username, string sessionId)
+        {
+            try
+            {
+                bool isFirstWhisper = !_repository.HasUserWhisperedYet(userId, sessionId);
+                if (isFirstWhisper)
+                {
+                    LoggerManager.Instance.LogInfo($"Received first message from '{userId}'; replying with message.");
+                    _client.SendWhisper(username, _firstWhisperResponse);
+                }
+            }
+            catch (Exception e)
+            {
+                LoggerManager.Instance.LogError($"Unhandled exception while trying to message user '{userId}'.", e);
+            }
+        }
+
+        private void LogWhisper(WhisperMessage whisper)
+        {
+            try
+            {
+                _repository.LogWhisper(whisper);
+            }
+            catch (Exception e)
+            {
+                LoggerManager.Instance.LogError("Unhandled exception while trying to log message.", e);
+                LoggerManager.Instance.LogError(e.Message, whisper);
+            }
         }
         
         public bool IsAuditing()
