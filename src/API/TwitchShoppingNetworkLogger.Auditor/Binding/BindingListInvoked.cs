@@ -6,12 +6,13 @@ namespace TwitchShoppingNetworkLogger.Auditor.Binding
 {
     public class BindingListInvoked<T> : BindingList<T>
     {
-        public BindingListInvoked() { }
-
         private ISynchronizeInvoke _invoke;
-        public BindingListInvoked(ISynchronizeInvoke invoke) { _invoke = invoke; }
-        public BindingListInvoked(IList<T> items) { this.DataSource = items; }
         delegate void ListChangedDelegate(ListChangedEventArgs e);
+
+        public BindingListInvoked(ISynchronizeInvoke invoke)
+        {
+            _invoke = invoke;
+        }
 
         protected override void OnListChanged(ListChangedEventArgs e)
         {
@@ -24,6 +25,7 @@ namespace TwitchShoppingNetworkLogger.Auditor.Binding
                 base.OnListChanged(e);
             }
         }
+
         public IList<T> DataSource {
             get {
                 return this;

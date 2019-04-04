@@ -12,7 +12,7 @@ namespace TwitchShoppingNetworkLogger.WinForm
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            string tokenUrl = "https://twitchtokengenerator.com/quick/UqmACDhQfv";
+            string tokenUrl = "https://twitchtokengenerator.com/quick/UcTFj1OGs0";
             try
             {
                 System.Diagnostics.Process.Start(tokenUrl);

@@ -121,7 +121,7 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
         public void EndAuditing()
         {
             _client.Disconnect();
-            _repository.CloseSession(_currentSession.ToString().ToLower());
+            _repository.CloseSession(_currentSession.Id);
             _currentSession = null;
         }
     }

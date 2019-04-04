@@ -90,5 +90,10 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
 
             return repository.HasUserWhisperedYet(userId, innerSession.Id);
         }
+
+        public IList<ISession> GetInnerSessions(string sessionId)
+        {
+            return new List<ISession>(_sessionsMap[sessionId]);
+        }
     }
 }

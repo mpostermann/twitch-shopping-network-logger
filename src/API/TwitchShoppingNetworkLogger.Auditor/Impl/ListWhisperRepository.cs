@@ -27,7 +27,7 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
         private ISynchronizeInvoke _whisperInvoke;
 
         private IDictionary<string, BindingListInvoked<ListUserModel>> _userListsBySession;
-        private IDictionary<string, IDictionary<string, BindingListInvoked<ListWhisperModel>>> _messageListsBySessionAndUser;
+        private IDictionary<string, IDictionary<string, BindingMessageListInvoked>> _messageListsBySessionAndUser;
 
         public ListWhisperRepository() :
             this(null, null)
@@ -39,7 +39,7 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
             _userInvoke = userListInvoke;
             _whisperInvoke = whisperListInvoke;
             _userListsBySession = new Dictionary<string, BindingListInvoked<ListUserModel>>();
-            _messageListsBySessionAndUser = new Dictionary<string, IDictionary<string, BindingListInvoked<ListWhisperModel>>>();
+            _messageListsBySessionAndUser = new Dictionary<string, IDictionary<string, BindingMessageListInvoked>>();
         }
 
         public ISession CreateSessionForUser(string userId)
@@ -86,12 +86,12 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
             return _userListsBySession[sessionId];
         }
 
-        public BindingListInvoked<ListWhisperModel> GetWhisperListBySessionAndUser(string sessionId, string userId)
+        public BindingMessageListInvoked GetWhisperListBySessionAndUser(string sessionId, string userId)
         {
             if (!_messageListsBySessionAndUser.ContainsKey(sessionId))
-                _messageListsBySessionAndUser.Add(sessionId, new Dictionary<string, BindingListInvoked<ListWhisperModel>>());
+                _messageListsBySessionAndUser.Add(sessionId, new Dictionary<string, BindingMessageListInvoked>());
             if (!_messageListsBySessionAndUser[sessionId].ContainsKey(userId))
-                _messageListsBySessionAndUser[sessionId].Add(userId, new BindingListInvoked<ListWhisperModel>(_whisperInvoke));
+                _messageListsBySessionAndUser[sessionId].Add(userId, new BindingMessageListInvoked(_whisperInvoke));
             return _messageListsBySessionAndUser[sessionId][userId];
         }
     }
