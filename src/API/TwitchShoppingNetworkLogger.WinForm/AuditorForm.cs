@@ -10,7 +10,7 @@ namespace TwitchShoppingNetworkLogger.WinForm
     public partial class AuditorForm : Form
     {
         private IWhisperAuditor _auditor;
-        private ListWhisperRepository _repository;
+        private ListWhisperRepository _listRepository;
         private IUser _loggedInUser;
         private Guid _currentSession;
 
@@ -20,10 +20,17 @@ namespace TwitchShoppingNetworkLogger.WinForm
         {
             InitializeComponent();
 
-            _repository = new ListWhisperRepository(usersListBox, dataGridView1);
+            /* Initialize the whisper repositories.
+               We'll keep a reference to the ListWhisperRepository to update our UI.
+               The ExcelWhisperRepository will run in the background and log whispers to an Excel file.
+            */
+            _listRepository = new ListWhisperRepository(usersListBox, dataGridView1);
+            var excelRepository = new ExcelWhisperRepository();
+            var aggregateRepository = new AggregateWhisperRepository(new IWhisperRepository[] { _listRepository, excelRepository });
 
             var userRepository = new UserRepository(ConfigManager.Instance, null);
-            _auditor = new AuditorRegistry(userRepository, ConfigManager.Instance).RegisterNewWhisperAuditor(username, oAuthToken, _repository);
+            _auditor = new AuditorRegistry(userRepository, ConfigManager.Instance)
+                .RegisterNewWhisperAuditor(username, oAuthToken, aggregateRepository);
             _loggedInUser = userRepository.GetUserByUsername(username);
         }
 
@@ -46,7 +53,7 @@ namespace TwitchShoppingNetworkLogger.WinForm
         {
             var currentUser = (ListUserModel) usersListBox.SelectedItem;
             if (currentUser != null)
-                dataGridView1.DataSource = _repository.GetWhisperListBySessionAndUser(_currentSession.ToString().ToLower(), currentUser.UserId);
+                dataGridView1.DataSource = _listRepository.GetWhisperListBySessionAndUser(_currentSession.ToString().ToLower(), currentUser.UserId);
             else
                 dataGridView1.DataSource = null;
         }
@@ -64,7 +71,7 @@ namespace TwitchShoppingNetworkLogger.WinForm
                 _currentSession = _auditor.CurrentSessionId;
                 startStopButton.Text = "Stop Logging";
                 
-                _boundUsers = _repository.GetUserListBySession(_currentSession.ToString().ToLower());
+                _boundUsers = _listRepository.GetUserListBySession(_currentSession.ToString().ToLower());
                 usersListBox.ClearSelected();
                 usersListBox.DataSource = _boundUsers;
                 usersListBox.DisplayMember = "Username";
