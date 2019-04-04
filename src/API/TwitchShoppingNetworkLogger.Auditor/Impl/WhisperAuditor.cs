@@ -13,8 +13,6 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
 {
     public class WhisperAuditor : IWhisperAuditor
     {
-        private string _oAuthToken;
-
         private TwitchClient _client;
         private IWhisperRepository _repository;
         private ISession _currentSession;
@@ -37,17 +35,16 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
             _repository = repository;
             _firstWhisperResponse = config.FirstWhisperResponse;
             User = user;
-            _oAuthToken = oAuthToken;
             _currentSession = null;
 
-            // TODO: Wrap TwitchClient in our own interface so we can unit test it
+            // TODO: Wrap TwitchClient in our own interface so we can unit test this
             var clientOptions = new ClientOptions {
                 MessagesAllowedInPeriod = 100,
                 ThrottlingPeriod = TimeSpan.FromSeconds(60)
             };
             var customClient = new WebSocketClient(clientOptions);
             _client = new TwitchClient(customClient);
-            var credentials = new ConnectionCredentials(User.Username, _oAuthToken);
+            var credentials = new ConnectionCredentials(User.Username, oAuthToken);
             _client.Initialize(credentials, User.Username);
 
             _client.OnConnected += Client_OnConnected;
