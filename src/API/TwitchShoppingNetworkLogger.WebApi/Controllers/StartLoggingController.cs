@@ -28,7 +28,7 @@ namespace TwitchShoppingNetworkLogger.WebApi.Controllers
                 LoggerManager.Instance.LogDebug("Received request.", request.Username);
 
                 if (!_auditorRegistry.HasRegisteredWhisperAuditor(request.Username))
-                    _auditorRegistry.RegisterNewWhisperAuditor(request.Username, request.Token, new ListWhisperRepository());
+                    _auditorRegistry.RegisterNewWhisperAuditor(request.Username, request.Token, new ExcelWhisperRepository());
                 var auditor = _auditorRegistry.GetRegisteredWhisperAuditor(request.Username);
 
                 StartAuditing(request.Username, auditor);
