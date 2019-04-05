@@ -13,10 +13,12 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
 {
     public class WhisperAuditor : IWhisperAuditor
     {
-        private TwitchClient _client;
-        private IWhisperRepository _repository;
-        private ISession _currentSession;
+        private readonly TwitchClient _client;
+        private readonly IWhisperRepository _repository;
+        private readonly bool _autoRespondEnabled;
         private readonly string _firstWhisperResponse;
+
+        private ISession _currentSession;
 
         public readonly IUser User;
 
@@ -33,6 +35,7 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
         public WhisperAuditor(IUser user, string oAuthToken, IWhisperRepository repository, IConfig config)
         {
             _repository = repository;
+            _autoRespondEnabled = config.AutoRespondEnabled;
             _firstWhisperResponse = config.FirstWhisperResponse;
             User = user;
             _currentSession = null;
@@ -82,7 +85,7 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
             try
             {
                 bool isFirstWhisper = !_repository.HasUserWhisperedYet(userId, sessionId);
-                if (isFirstWhisper)
+                if (_autoRespondEnabled && isFirstWhisper)
                 {
                     LoggerManager.Instance.LogInfo($"Received first message from '{userId}'; replying with message.");
                     _client.SendWhisper(username, _firstWhisperResponse);
