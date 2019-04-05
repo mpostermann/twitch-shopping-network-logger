@@ -64,7 +64,7 @@ namespace TwitchShoppingNetworkLogger.Logging.Impl
                 Message = message,
                 ObjectToLog = objToLog
             };
-            Console.WriteLine(JsonConvert.SerializeObject(objToLog));
+            Console.WriteLine(JsonConvert.SerializeObject(logMessage));
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using TwitchShoppingNetworkLogger.Logging.Impl;
+﻿using System;
+using System.IO;
+using TwitchShoppingNetworkLogger.Logging.Impl;
 using TwitchShoppingNetworkLogger.Logging.Interfaces;
 
 namespace Logging
@@ -12,9 +14,15 @@ namespace Logging
             get
             {
                 if (_loggerInstance == null)
-                    _loggerInstance = new ConsoleLogger();
+                    _loggerInstance = ConstructTextLogger();
                 return _loggerInstance;
             }
+        }
+
+        private static ILogger ConstructTextLogger()
+        {
+            Directory.CreateDirectory("logs");
+            return new TextLogger($"logs\\TSN_Log_{DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss")}.log");
         }
     }
 }
