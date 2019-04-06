@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Logging;
 using TwitchLib.Client;
 using TwitchLib.Client.Events;
@@ -76,18 +78,24 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
                 CurrentSessionId.ToString().ToLower(),
                 e.WhisperMessage.Message);
 
-            MessageUserIfFirstWhisper(whisper.FromUserId, whisper.FromUsername, whisper.SessionId);
+            bool isFirstWhisper = !_repository.HasUserWhisperedYet(whisper.FromUserId, whisper.SessionId);
             LogWhisper(whisper);
+
+            if (isFirstWhisper)
+                MessageUserForFirstWhisper(whisper.FromUserId, whisper.FromUsername);
         }
 
-        private void MessageUserIfFirstWhisper(string userId, string username, string sessionId)
+        private void MessageUserForFirstWhisper(string userId, string username)
         {
             try
             {
-                bool isFirstWhisper = !_repository.HasUserWhisperedYet(userId, sessionId);
-                if (_autoRespondEnabled && isFirstWhisper)
+                if (_autoRespondEnabled)
                 {
                     LoggerManager.Instance.LogInfo($"Received first message from '{userId}'; replying with message.");
+
+                    /* If a user is set to only receive whispers from users they've whispered before,
+                       then you may need to wait a couple seconds before the setting updates on Twitch's side */
+                    Thread.Sleep(2000);
                     _client.SendWhisper(username, _firstWhisperResponse);
                 }
             }
