@@ -32,7 +32,7 @@ namespace TwitchShoppingNetworkLogger.WinForm
             var excelRepository = new ExcelWhisperRepository(excelFileManager);
             _aggregateRepository = new AggregateWhisperRepository(new IWhisperRepository[] { _listRepository, excelRepository });
 
-            var userRepository = new UserRepository(ConfigManager.Instance, null);
+            var userRepository = new UserRepository(ConfigManager.Instance);
             _auditor = new AuditorRegistry(userRepository, ConfigManager.Instance)
                 .RegisterNewWhisperAuditor(username, oAuthToken, _aggregateRepository);
             _loggedInUser = userRepository.GetUserByUsername(username);

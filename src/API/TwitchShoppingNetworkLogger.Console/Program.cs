@@ -37,7 +37,7 @@ namespace TwitchShoppingNetworkLogger.Console
 
         private static void StartAuditing(string username, string token)
         {
-            _userRepository = new UserRepository(ConfigManager.Instance, null);
+            _userRepository = new UserRepository(ConfigManager.Instance);
             _auditorRegistry = new AuditorRegistry(_userRepository, ConfigManager.Instance);
 
             var excelFileManager = new ExcelFileManager(ConfigManager.Instance.ExcelDirectory);

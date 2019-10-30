@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using TwitchShoppingNetworkLogger.Config.Data;
 
 namespace TwitchShoppingNetworkLogger.Config.Interfaces
 {
@@ -9,7 +8,6 @@ namespace TwitchShoppingNetworkLogger.Config.Interfaces
         bool AutoRespondEnabled { get; }
         string FirstWhisperResponse { get; }
         ICollection<string> AuthorizedUsers { get; }
-        DatabaseConnection DatabaseConnection { get; }
         string ExcelDirectory { get; }
     }
 }

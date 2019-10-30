@@ -19,7 +19,7 @@ namespace TwitchShoppingNetworkLogger.WebApi.Controllers
 
         public StartLoggingController()
         {
-            _userRepository = new UserRepository(ConfigManager.Instance, null);
+            _userRepository = new UserRepository(ConfigManager.Instance);
             _auditorRegistry = new AuditorRegistry(_userRepository, ConfigManager.Instance);
             _excelFileManager = new ExcelFileManager(ConfigManager.Instance.ExcelDirectory);
         }

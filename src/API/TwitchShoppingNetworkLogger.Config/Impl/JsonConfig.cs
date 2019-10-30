@@ -2,7 +2,6 @@
 using System.IO;
 using Logging;
 using Newtonsoft.Json.Linq;
-using TwitchShoppingNetworkLogger.Config.Data;
 using TwitchShoppingNetworkLogger.Config.Interfaces;
 
 namespace TwitchShoppingNetworkLogger.Config.Impl
@@ -22,7 +21,6 @@ namespace TwitchShoppingNetworkLogger.Config.Impl
         public bool AutoRespondEnabled => _config["AutoRespondEnabled"].Value<bool>();
         public string FirstWhisperResponse => _config["FirstWhisperResponse"].Value<string>();
         public ICollection<string> AuthorizedUsers => _config["AuthorizedUsers"].ToObject<string[]>();
-        public DatabaseConnection DatabaseConnection => _config["DatabaseConnection"].ToObject<DatabaseConnection>();
         public string ExcelDirectory => _config["ExcelDirectory"].Value<string>();
     }
 }
