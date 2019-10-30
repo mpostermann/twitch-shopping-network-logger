@@ -5,21 +5,24 @@ using Microsoft.AspNetCore.Mvc;
 using TwitchShoppingNetworkLogger.Auditor.Impl;
 using TwitchShoppingNetworkLogger.Auditor.Interfaces;
 using TwitchShoppingNetworkLogger.Config;
+using TwitchShoppingNetworkLogger.Excel;
 using TwitchShoppingNetworkLogger.WebApi.Request;
 
 namespace TwitchShoppingNetworkLogger.WebApi.Controllers
 {
-    [Route("api/endlogging")]
     [ApiController]
+    [Route("api/endlogging")]
     public class EndLoggingController : TSNControllerBase
     {
         private IUserRepository _userRepository;
         private IAuditorRegistry _auditorRegistry;
+        private ExcelFileManager _excelFileManager;
 
         public EndLoggingController()
         {
             _userRepository = new UserRepository(ConfigManager.Instance, null);
             _auditorRegistry = new AuditorRegistry(_userRepository, ConfigManager.Instance);
+            _excelFileManager = new ExcelFileManager(ConfigManager.Instance.ExcelDirectory);
         }
 
         [HttpPut]
@@ -31,7 +34,6 @@ namespace TwitchShoppingNetworkLogger.WebApi.Controllers
                 var auditor = _auditorRegistry.GetRegisteredWhisperAuditor(request.Username);
 
                 var sessionId = auditor.CurrentSessionId;
-                EndAuditing(request.Username, auditor);
                 return GetExcelStream(sessionId.ToString());
             }
             catch (Exception e) {
@@ -55,7 +57,7 @@ namespace TwitchShoppingNetworkLogger.WebApi.Controllers
         private Stream GetExcelStream(string sessionId)
         {
             // TODO: Move this to a method of the Excel auditor instead of using hard-coded paths
-            var path = $"{ConfigManager.Instance.ExcelDirectory}TSN_{sessionId}.xlsx";
+            var path = _excelFileManager.GetFileInfo(sessionId).FullName;
             return new FileStream(path, FileMode.Open, FileAccess.Read);
         }
     }

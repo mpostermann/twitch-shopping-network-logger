@@ -225,6 +225,10 @@
       <Project>{284e21b1-1a06-4b6b-9f86-77b4b9fa494d}</Project>
       <Name>TwitchShoppingNetworkLogger.Db.Interfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TwitchShoppingNetworkLogger.Excel\TwitchShoppingNetworkLogger.Excel.csproj">
+      <Project>{058575c4-4dd6-4ac7-a707-1f1fc6e75acf}</Project>
+      <Name>TwitchShoppingNetworkLogger.Excel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TwitchShoppingNetworkLogger.Logging\TwitchShoppingNetworkLogger.Logging.csproj">
       <Project>{a801d405-8b47-4bad-8b61-0746b742f73b}</Project>
       <Name>TwitchShoppingNetworkLogger.Logging</Name>

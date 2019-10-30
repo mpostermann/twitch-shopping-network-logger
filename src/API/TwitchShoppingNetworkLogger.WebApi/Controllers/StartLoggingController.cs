@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using TwitchShoppingNetworkLogger.Auditor.Impl;
 using TwitchShoppingNetworkLogger.Auditor.Interfaces;
 using TwitchShoppingNetworkLogger.Config;
+using TwitchShoppingNetworkLogger.Excel;
 using TwitchShoppingNetworkLogger.WebApi.Request;
 
 namespace TwitchShoppingNetworkLogger.WebApi.Controllers
@@ -14,11 +15,13 @@ namespace TwitchShoppingNetworkLogger.WebApi.Controllers
     {
         private IUserRepository _userRepository;
         private IAuditorRegistry _auditorRegistry;
+        private ExcelFileManager _excelFileManager;
 
         public StartLoggingController()
         {
             _userRepository = new UserRepository(ConfigManager.Instance, null);
             _auditorRegistry = new AuditorRegistry(_userRepository, ConfigManager.Instance);
+            _excelFileManager = new ExcelFileManager(ConfigManager.Instance.ExcelDirectory);
         }
 
         [HttpPut]
@@ -28,7 +31,7 @@ namespace TwitchShoppingNetworkLogger.WebApi.Controllers
                 LoggerManager.Instance.LogDebug("Received request.", request.Username);
 
                 if (!_auditorRegistry.HasRegisteredWhisperAuditor(request.Username))
-                    _auditorRegistry.RegisterNewWhisperAuditor(request.Username, request.Token, new ExcelWhisperRepository(ConfigManager.Instance.ExcelDirectory));
+                    _auditorRegistry.RegisterNewWhisperAuditor(request.Username, request.Token, new ExcelWhisperRepository(_excelFileManager));
                 var auditor = _auditorRegistry.GetRegisteredWhisperAuditor(request.Username);
 
                 StartAuditing(request.Username, auditor);

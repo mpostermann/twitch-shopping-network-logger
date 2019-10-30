@@ -2,6 +2,7 @@
 using TwitchShoppingNetworkLogger.Auditor.Impl;
 using TwitchShoppingNetworkLogger.Auditor.Interfaces;
 using TwitchShoppingNetworkLogger.Config;
+using TwitchShoppingNetworkLogger.Excel;
 
 namespace TwitchShoppingNetworkLogger.Console
 {
@@ -39,7 +40,8 @@ namespace TwitchShoppingNetworkLogger.Console
             _userRepository = new UserRepository(ConfigManager.Instance, null);
             _auditorRegistry = new AuditorRegistry(_userRepository, ConfigManager.Instance);
 
-            _auditor = _auditorRegistry.RegisterNewWhisperAuditor(username, token, new ExcelWhisperRepository(ConfigManager.Instance.ExcelDirectory));
+            var excelFileManager = new ExcelFileManager(ConfigManager.Instance.ExcelDirectory);
+            _auditor = _auditorRegistry.RegisterNewWhisperAuditor(username, token, new ExcelWhisperRepository(excelFileManager));
             _auditor.StartAuditing();
         }
 

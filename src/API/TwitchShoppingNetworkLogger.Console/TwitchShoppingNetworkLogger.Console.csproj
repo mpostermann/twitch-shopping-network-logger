@@ -8,6 +8,7 @@
   <ItemGroup>
     <ProjectReference Include="..\TwitchShoppingNetworkLogger.Auditor\TwitchShoppingNetworkLogger.Auditor.csproj" />
     <ProjectReference Include="..\TwitchShoppingNetworkLogger.Config\TwitchShoppingNetworkLogger.Config.csproj" />
+    <ProjectReference Include="..\TwitchShoppingNetworkLogger.Excel\TwitchShoppingNetworkLogger.Excel.csproj" />
     <ProjectReference Include="..\TwitchShoppingNetworkLogger.Logging\TwitchShoppingNetworkLogger.Logging.csproj" />
   </ItemGroup>
 

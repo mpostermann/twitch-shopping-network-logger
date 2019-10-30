@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TwitchShoppingNetworkLogger.Db.Interfaces\TwitchShoppingNetworkLogger.Db.Interfaces.csproj" />
+    <ProjectReference Include="..\TwitchShoppingNetworkLogger.Excel\TwitchShoppingNetworkLogger.Excel.csproj" />
     <ProjectReference Include="..\TwitchShoppingNetworkLogger.Logging\TwitchShoppingNetworkLogger.Logging.csproj" />
     <ProjectReference Include="..\TwitchShoppingNetworkLogger.Auditor\TwitchShoppingNetworkLogger.Auditor.csproj" />
     <ProjectReference Include="..\TwitchShoppingNetworkLogger.Config\TwitchShoppingNetworkLogger.Config.csproj" />

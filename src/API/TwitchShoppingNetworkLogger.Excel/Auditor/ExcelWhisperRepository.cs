@@ -7,6 +7,7 @@ using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using TwitchShoppingNetworkLogger.Auditor.Interfaces;
 using TwitchShoppingNetworkLogger.Auditor.Models;
+using TwitchShoppingNetworkLogger.Excel;
 
 namespace TwitchShoppingNetworkLogger.Auditor.Impl
 {
@@ -37,14 +38,12 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
         private ExcelPackage _excelPackage;
         private object _excelLock = new Object();
 
-        private string _excelDirectory;
+        private ExcelFileManager _fileManager;
         private IDictionary<string, IList<ExcelUserIndex>> _usersBySession;
 
-        public ExcelWhisperRepository(string excelDirectory)
+        public ExcelWhisperRepository(ExcelFileManager fileManager)
         {
-            _excelDirectory = excelDirectory;
-            if (!_excelDirectory.EndsWith("\\"))
-                _excelDirectory += "\\";
+            _fileManager = fileManager;
 
             _excelPackage = null;
             _usersBySession = new Dictionary<string, IList<ExcelUserIndex>>();
@@ -55,8 +54,7 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
             var retVal = new Session(userId);
 
             // Create a new file
-            Directory.CreateDirectory(_excelDirectory);
-            var file = new FileInfo($"{_excelDirectory}TSN_{retVal.Id}.xlsx");
+            var file = _fileManager.GetFileInfo(retVal.Id);
             _excelPackage = CreateNewExcel(file);
             _excelPackage.Save();
 

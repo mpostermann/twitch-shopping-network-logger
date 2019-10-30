@@ -4,6 +4,7 @@ using TwitchShoppingNetworkLogger.Auditor.Binding;
 using TwitchShoppingNetworkLogger.Auditor.Impl;
 using TwitchShoppingNetworkLogger.Auditor.Interfaces;
 using TwitchShoppingNetworkLogger.Config;
+using TwitchShoppingNetworkLogger.Excel;
 
 namespace TwitchShoppingNetworkLogger.WinForm
 {
@@ -27,7 +28,8 @@ namespace TwitchShoppingNetworkLogger.WinForm
                The ExcelWhisperRepository will run in the background and log whispers to an Excel file.
             */
             _listRepository = new ListWhisperRepository(usersListBox, whispersTextBox);
-            var excelRepository = new ExcelWhisperRepository(ConfigManager.Instance.ExcelDirectory);
+            var excelFileManager = new ExcelFileManager(ConfigManager.Instance.ExcelDirectory);
+            var excelRepository = new ExcelWhisperRepository(excelFileManager);
             _aggregateRepository = new AggregateWhisperRepository(new IWhisperRepository[] { _listRepository, excelRepository });
 
             var userRepository = new UserRepository(ConfigManager.Instance, null);
