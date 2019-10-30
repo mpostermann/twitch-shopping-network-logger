@@ -7,6 +7,9 @@ Config.json
 # AWS Config file
 aws-lambda-tools-defaults.json
 
+# Azure Config file
+*.pubxml
+
 # User-specific files
 *.suo
 *.user
