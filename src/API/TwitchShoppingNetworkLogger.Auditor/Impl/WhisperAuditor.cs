@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using Logging;
 using TwitchLib.Client;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Clients;
+using TwitchLib.Communication.Events;
 using TwitchLib.Communication.Models;
 using TwitchShoppingNetworkLogger.Auditor.Interfaces;
 using TwitchShoppingNetworkLogger.Config.Interfaces;
@@ -14,12 +16,12 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
 {
     public class WhisperAuditor : IWhisperAuditor
     {
-        private readonly TwitchClient _client;
         private readonly IWhisperRepository _repository;
         private readonly bool _autoRespondEnabled;
         private readonly string _firstWhisperResponse;
 
         private ISession _currentSession;
+        private TwitchClient _client;
 
         public readonly IUser User;
 
@@ -42,18 +44,67 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
             _currentSession = null;
 
             // TODO: Wrap TwitchClient in our own interface so we can unit test this
+            var credentials = new ConnectionCredentials(User.Username, oAuthToken);
+            _client = CreateClient(credentials, User.Username);
+        }
+
+        private TwitchClient CreateClient(ConnectionCredentials credentials, string username)
+        {
             var clientOptions = new ClientOptions {
                 MessagesAllowedInPeriod = 100,
                 ThrottlingPeriod = TimeSpan.FromSeconds(60)
             };
             var customClient = new WebSocketClient(clientOptions);
-            _client = new TwitchClient(customClient);
-            var credentials = new ConnectionCredentials(User.Username, oAuthToken);
-            _client.Initialize(credentials, User.Username);
 
-            _client.OnConnected += Client_OnConnected;
-            _client.OnJoinedChannel += Client_OnJoinedChannel;
-            _client.OnWhisperReceived += Client_OnWhisperReceived;
+            var retVal = new TwitchClient(customClient);
+            retVal.Initialize(credentials, username);
+
+            retVal.OnConnected += Client_OnConnected;
+            retVal.OnJoinedChannel += Client_OnJoinedChannel;
+            retVal.OnWhisperReceived += Client_OnWhisperReceived;
+            retVal.OnDisconnected += Client_OnDisconnected;
+
+            return retVal;
+        }
+
+        private void Client_OnDisconnected(object sender, OnDisconnectedEventArgs e)
+        {
+            if (IsAuditing())
+            {
+                // If we disconnected while auditing, that means we unexpectedly lost connection. Attempt to reconnect.
+                LoggerManager.Instance.LogError("Logger unexpectedly disconnected from Twitch. Attempting to reconnect...");
+
+                while (!_client.IsConnected && IsAuditing())
+                {
+                    Exception connectionException = null;
+                    try {
+                        LoggerManager.Instance.LogInfo("Attempting reconnect...");
+                        ReconnectClient();
+                    }
+                    catch (Exception ex) {
+                        connectionException = ex;
+                    }
+
+                    if (!_client.IsConnected && IsAuditing())
+                    {
+                        LoggerManager.Instance.LogError($"Reconnect failed. Attempting again in 15 seconds...", connectionException);
+                        Task.Delay(15000);
+                    }
+                }
+            }
+        }
+
+        private void ReconnectClient()
+        {
+            /* When reconnecting due to a network error, we need to fully recreate a new web socket to reconnect properly.
+             * Simply reconnecting the existing TwitchClient doesn't work.
+             */
+            _client.OnDisconnected -= Client_OnDisconnected;
+            _client.Disconnect();
+
+            var credentials = _client.ConnectionCredentials;
+            _client = CreateClient(credentials, User.Username);
+            _client.Connect();
         }
 
         private void Client_OnConnected(object sender, OnConnectedArgs e)
@@ -130,9 +181,9 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
 
         public void EndAuditing()
         {
-            _client.Disconnect();
             _repository.CloseSession(_currentSession.Id);
             _currentSession = null;
+            _client.Disconnect();
         }
     }
 }
