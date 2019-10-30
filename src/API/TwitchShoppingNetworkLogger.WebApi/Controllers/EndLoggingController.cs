@@ -34,6 +34,7 @@ namespace TwitchShoppingNetworkLogger.WebApi.Controllers
                 var auditor = _auditorRegistry.GetRegisteredWhisperAuditor(request.Username);
 
                 var sessionId = auditor.CurrentSessionId;
+                EndAuditing(request.Username, auditor);
                 return GetExcelStream(sessionId.ToString());
             }
             catch (Exception e) {
