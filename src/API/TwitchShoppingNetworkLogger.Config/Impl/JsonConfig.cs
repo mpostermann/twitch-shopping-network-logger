@@ -23,5 +23,6 @@ namespace TwitchShoppingNetworkLogger.Config.Impl
         public string FirstWhisperResponse => _config["FirstWhisperResponse"].Value<string>();
         public ICollection<string> AuthorizedUsers => _config["AuthorizedUsers"].ToObject<string[]>();
         public DatabaseConnection DatabaseConnection => _config["DatabaseConnection"].ToObject<DatabaseConnection>();
+        public string ExcelDirectory => _config["ExcelDirectory"].Value<string>();
     }
 }

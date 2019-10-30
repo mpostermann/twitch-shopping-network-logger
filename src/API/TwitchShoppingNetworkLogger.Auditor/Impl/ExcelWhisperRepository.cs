@@ -37,10 +37,15 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
         private ExcelPackage _excelPackage;
         private object _excelLock = new Object();
 
+        private string _excelDirectory;
         private IDictionary<string, IList<ExcelUserIndex>> _usersBySession;
 
-        public ExcelWhisperRepository()
+        public ExcelWhisperRepository(string excelDirectory)
         {
+            _excelDirectory = excelDirectory;
+            if (!_excelDirectory.EndsWith("\\"))
+                _excelDirectory += "\\";
+
             _excelPackage = null;
             _usersBySession = new Dictionary<string, IList<ExcelUserIndex>>();
         }
@@ -50,8 +55,9 @@ namespace TwitchShoppingNetworkLogger.Auditor.Impl
             var retVal = new Session(userId);
 
             // Create a new file
-            var file = new FileInfo($"TSN_{userId}_{DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss")}.xlsx");
-            _excelPackage = CreateNewExcel(file); 
+            Directory.CreateDirectory(_excelDirectory);
+            var file = new FileInfo($"{_excelDirectory}TSN_{retVal.Id}.xlsx");
+            _excelPackage = CreateNewExcel(file);
             _excelPackage.Save();
 
             // Initialize users list

@@ -39,7 +39,7 @@ namespace TwitchShoppingNetworkLogger.Console
             _userRepository = new UserRepository(ConfigManager.Instance, null);
             _auditorRegistry = new AuditorRegistry(_userRepository, ConfigManager.Instance);
 
-            _auditor = _auditorRegistry.RegisterNewWhisperAuditor(username, token, new ExcelWhisperRepository());
+            _auditor = _auditorRegistry.RegisterNewWhisperAuditor(username, token, new ExcelWhisperRepository(ConfigManager.Instance.ExcelDirectory));
             _auditor.StartAuditing();
         }
 

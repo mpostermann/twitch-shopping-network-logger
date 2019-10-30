@@ -27,7 +27,7 @@ namespace TwitchShoppingNetworkLogger.WinForm
                The ExcelWhisperRepository will run in the background and log whispers to an Excel file.
             */
             _listRepository = new ListWhisperRepository(usersListBox, whispersTextBox);
-            var excelRepository = new ExcelWhisperRepository();
+            var excelRepository = new ExcelWhisperRepository(ConfigManager.Instance.ExcelDirectory);
             _aggregateRepository = new AggregateWhisperRepository(new IWhisperRepository[] { _listRepository, excelRepository });
 
             var userRepository = new UserRepository(ConfigManager.Instance, null);

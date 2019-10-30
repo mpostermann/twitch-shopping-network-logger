@@ -28,7 +28,7 @@ namespace TwitchShoppingNetworkLogger.WebApi.Controllers
                 LoggerManager.Instance.LogDebug("Received request.", request.Username);
 
                 if (!_auditorRegistry.HasRegisteredWhisperAuditor(request.Username))
-                    _auditorRegistry.RegisterNewWhisperAuditor(request.Username, request.Token, new ExcelWhisperRepository());
+                    _auditorRegistry.RegisterNewWhisperAuditor(request.Username, request.Token, new ExcelWhisperRepository(ConfigManager.Instance.ExcelDirectory));
                 var auditor = _auditorRegistry.GetRegisteredWhisperAuditor(request.Username);
 
                 StartAuditing(request.Username, auditor);
@@ -36,7 +36,7 @@ namespace TwitchShoppingNetworkLogger.WebApi.Controllers
             }
             catch (Exception e) {
                 LoggerManager.Instance.LogError("Unhandled error encountered.", e);
-                throw new Exception("Unexpected error.");
+                throw;
             }
         }
 

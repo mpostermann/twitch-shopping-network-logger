@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading;
-using System.Threading.Tasks;
 using Logging;
 using TwitchLib.Client;
 using TwitchLib.Client.Events;

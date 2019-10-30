@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Logging;
 using Microsoft.AspNetCore.Mvc;
 using TwitchShoppingNetworkLogger.Auditor.Impl;
@@ -22,19 +23,20 @@ namespace TwitchShoppingNetworkLogger.WebApi.Controllers
         }
 
         [HttpPut]
-        public string Put(EndLoggingRequest request)
+        public Stream Put(EndLoggingRequest request)
         {
             try {
                 LoggerManager.Instance.LogDebug("Received request.", request.Username);
 
                 var auditor = _auditorRegistry.GetRegisteredWhisperAuditor(request.Username);
 
+                var sessionId = auditor.CurrentSessionId;
                 EndAuditing(request.Username, auditor);
-                return "Success";
+                return GetExcelStream(sessionId.ToString());
             }
             catch (Exception e) {
                 LoggerManager.Instance.LogError("Unhandled error encountered.", e);
-                throw new Exception("Unexpected error.");
+                throw;
             }
         }
 
@@ -48,6 +50,13 @@ namespace TwitchShoppingNetworkLogger.WebApi.Controllers
                 auditor.EndAuditing();
                 LoggerManager.Instance.LogInfo($"Successfully stopped auditing whispers for {username}.");
             }
+        }
+
+        private Stream GetExcelStream(string sessionId)
+        {
+            // TODO: Move this to a method of the Excel auditor instead of using hard-coded paths
+            var path = $"{ConfigManager.Instance.ExcelDirectory}TSN_{sessionId}.xlsx";
+            return new FileStream(path, FileMode.Open, FileAccess.Read);
         }
     }
 }

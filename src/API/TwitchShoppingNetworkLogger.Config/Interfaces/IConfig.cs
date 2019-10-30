@@ -10,5 +10,6 @@ namespace TwitchShoppingNetworkLogger.Config.Interfaces
         string FirstWhisperResponse { get; }
         ICollection<string> AuthorizedUsers { get; }
         DatabaseConnection DatabaseConnection { get; }
+        string ExcelDirectory { get; }
     }
 }
