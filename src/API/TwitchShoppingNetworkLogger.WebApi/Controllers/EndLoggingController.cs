@@ -1,11 +1,13 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using Logging;
 using Microsoft.AspNetCore.Mvc;
 using TwitchShoppingNetworkLogger.Auditor.Impl;
 using TwitchShoppingNetworkLogger.Auditor.Interfaces;
 using TwitchShoppingNetworkLogger.Config;
 using TwitchShoppingNetworkLogger.Excel;
+using TwitchShoppingNetworkLogger.WebApi.Auth;
 using TwitchShoppingNetworkLogger.WebApi.Request;
 
 namespace TwitchShoppingNetworkLogger.WebApi.Controllers
@@ -14,22 +16,25 @@ namespace TwitchShoppingNetworkLogger.WebApi.Controllers
     [Route("api/endlogging")]
     public class EndLoggingController : TSNControllerBase
     {
+        private IAuthorizor _authorizor;
         private IUserRepository _userRepository;
         private IAuditorRegistry _auditorRegistry;
         private ExcelFileManager _excelFileManager;
 
         public EndLoggingController()
         {
+            _authorizor = new TwitchAuthorizor(ConfigManager.Instance.AuthorizedUsers);
             _userRepository = new UserRepository(ConfigManager.Instance);
             _auditorRegistry = new AuditorRegistry(_userRepository, ConfigManager.Instance);
             _excelFileManager = new ExcelFileManager(ConfigManager.Instance.ExcelDirectory);
         }
 
         [HttpPut]
-        public Stream Put(EndLoggingRequest request)
+        public async Task<Stream> Put(EndLoggingRequest request)
         {
             try {
                 LoggerManager.Instance.LogDebug("Received request.", request.Username);
+                await _authorizor.Authorize(request.Username, request.Token);
 
                 var auditor = _auditorRegistry.GetRegisteredWhisperAuditor(request.Username);
 

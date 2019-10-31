@@ -1,34 +1,39 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Logging;
 using Microsoft.AspNetCore.Mvc;
 using TwitchShoppingNetworkLogger.Auditor.Impl;
 using TwitchShoppingNetworkLogger.Auditor.Interfaces;
 using TwitchShoppingNetworkLogger.Config;
 using TwitchShoppingNetworkLogger.Excel;
+using TwitchShoppingNetworkLogger.WebApi.Auth;
 using TwitchShoppingNetworkLogger.WebApi.Request;
 
 namespace TwitchShoppingNetworkLogger.WebApi.Controllers
 {
-    [Route("api/startlogging")]
     [ApiController]
+    [Route("api/startlogging")]
     public class StartLoggingController : TSNControllerBase
     {
+        private IAuthorizor _authorizor;
         private IUserRepository _userRepository;
         private IAuditorRegistry _auditorRegistry;
         private ExcelFileManager _excelFileManager;
 
         public StartLoggingController()
         {
+            _authorizor = new TwitchAuthorizor(ConfigManager.Instance.AuthorizedUsers);
             _userRepository = new UserRepository(ConfigManager.Instance);
             _auditorRegistry = new AuditorRegistry(_userRepository, ConfigManager.Instance);
             _excelFileManager = new ExcelFileManager(ConfigManager.Instance.ExcelDirectory);
         }
 
         [HttpPut]
-        public string Put(StartLoggingRequest request)
+        public async Task<string> Put(StartLoggingRequest request)
         {
             try {
                 LoggerManager.Instance.LogDebug("Received request.", request.Username);
+                await _authorizor.Authorize(request.Username, request.Token);
 
                 if (!_auditorRegistry.HasRegisteredWhisperAuditor(request.Username))
                     _auditorRegistry.RegisterNewWhisperAuditor(request.Username, request.Token, new ExcelWhisperRepository(_excelFileManager));
