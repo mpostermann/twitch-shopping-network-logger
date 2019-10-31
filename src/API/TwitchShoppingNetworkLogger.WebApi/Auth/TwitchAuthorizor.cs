@@ -1,8 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using TwitchShoppingNetworkLogger.WebApi.Request;
 
 namespace TwitchShoppingNetworkLogger.WebApi.Auth
 {
@@ -17,17 +19,16 @@ namespace TwitchShoppingNetworkLogger.WebApi.Auth
             _authorizedUsernames = authorizedUsernames;
         }
 
-        public async Task Authorize(string username, string oauth)
+        public async Task<AuthorizationRequest> Authorize(IHeaderDictionary headers)
         {
+            string oauth = headers["Token"];
             var response = await ValidateToken(oauth);
 
-            // Validate that our user is who they claim they are
-            if (!username.Trim().ToLower().Equals(response.Login.Trim().ToLower()))
-                throw new Exception("Authentication failed");
-
             // Validate that our user is allowed to use our application
-            if (!_authorizedUsernames.Contains(username.Trim().ToLower()))
+            if (!_authorizedUsernames.Contains(response.Login))
                 throw new Exception("User unauthorized");
+
+            return new AuthorizationRequest(response.Login, oauth);
         }
 
         private async Task<TwitchAuthValidateResponse> ValidateToken(string oauth)

@@ -8,7 +8,6 @@ using TwitchShoppingNetworkLogger.Auditor.Interfaces;
 using TwitchShoppingNetworkLogger.Config;
 using TwitchShoppingNetworkLogger.Excel;
 using TwitchShoppingNetworkLogger.WebApi.Auth;
-using TwitchShoppingNetworkLogger.WebApi.Request;
 
 namespace TwitchShoppingNetworkLogger.WebApi.Controllers
 {
@@ -30,12 +29,12 @@ namespace TwitchShoppingNetworkLogger.WebApi.Controllers
         }
 
         [HttpPut]
-        public async Task<Stream> Put(EndLoggingRequest request)
+        public async Task<Stream> Put()
         {
             try {
-                LoggerManager.Instance.LogDebug("Received request.", request.Username);
-                await _authorizor.Authorize(request.Username, request.Token);
+                var request = await _authorizor.Authorize(Request.Headers);
 
+                LoggerManager.Instance.LogDebug("Received request.", request.Username);
                 var auditor = _auditorRegistry.GetRegisteredWhisperAuditor(request.Username);
 
                 var sessionId = auditor.CurrentSessionId;

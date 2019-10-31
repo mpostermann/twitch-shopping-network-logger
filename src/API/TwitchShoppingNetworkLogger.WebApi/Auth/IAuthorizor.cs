@@ -1,9 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
+using TwitchShoppingNetworkLogger.WebApi.Request;
 
 namespace TwitchShoppingNetworkLogger.WebApi.Auth
 {
     public interface IAuthorizor
     {
-        Task Authorize(string username, string oauth);
+        Task<AuthorizationRequest> Authorize(IHeaderDictionary headers);
     }
 }
