@@ -37,6 +37,10 @@ namespace TwitchShoppingNetworkLogger.WebApi.Auth
 
         private async Task<TwitchAuthValidateResponse> ValidateToken(string oauth)
         {
+            /* Send an HTTP request to Twitch's oauth endpoint.
+             * There's probably a way to do this through the TwitchLib library but I cannot
+             * find an appropriate method through the documentation or browsing the code
+             */
             var client = new HttpClient();
             client.DefaultRequestHeaders.Add("Authorization", $"OAuth {oauth}");
             HttpResponseMessage response = await client.GetAsync(TwitchAuthUrl);
