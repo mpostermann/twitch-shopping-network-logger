@@ -32,6 +32,8 @@ namespace TwitchShoppingNetworkLogger.WebApi.Controllers
         {
             try {
                 var authorizedUser = await _authorizor.Authorize(Request.Headers);
+                if (authorizedUser.Status != 200)
+                    return StatusCode(authorizedUser.Status);
 
                 LoggerManager.Instance.LogDebug("Received request.", authorizedUser.Username);
                 if (!_auditorRegistry.HasRegisteredWhisperAuditor(authorizedUser.Username))

@@ -24,11 +24,15 @@ namespace TwitchShoppingNetworkLogger.WebApi.Auth
             string oauth = headers["Token"];
             var response = await ValidateToken(oauth);
 
+            // Check if the token is valid
+            if (response.Status == 401)
+                return new AuthorizationRequest(string.Empty, string.Empty, 401);
+
             // Validate that our user is allowed to use our application
             if (!_authorizedUsernames.Contains(response.Login))
-                throw new Exception("User unauthorized");
+                return new AuthorizationRequest(response.Login, oauth, 403);
 
-            return new AuthorizationRequest(response.Login, oauth);
+            return new AuthorizationRequest(response.Login, oauth, 200);
         }
 
         private async Task<TwitchAuthValidateResponse> ValidateToken(string oauth)
@@ -37,8 +41,11 @@ namespace TwitchShoppingNetworkLogger.WebApi.Auth
             client.DefaultRequestHeaders.Add("Authorization", $"OAuth {oauth}");
             HttpResponseMessage response = await client.GetAsync(TwitchAuthUrl);
 
+            // Check if the token is valid, or if there was some other error
+            if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                return new TwitchAuthValidateResponse() { Status = 401 };
             if (response.StatusCode != System.Net.HttpStatusCode.OK)
-                throw new Exception("Authentication failed");
+                throw new Exception($"Authentication failed with result {response.StatusCode}");
 
             string responseContent = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<TwitchAuthValidateResponse>(responseContent);

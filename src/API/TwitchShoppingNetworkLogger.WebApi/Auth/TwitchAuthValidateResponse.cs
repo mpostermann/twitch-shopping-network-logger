@@ -13,5 +13,8 @@ namespace TwitchShoppingNetworkLogger.WebApi.Auth
 
         [JsonProperty(PropertyName = "user_id")]
         public string UserId { get; set; }
+
+        [JsonIgnore]
+        public int Status { get; set; }
     }
 }
