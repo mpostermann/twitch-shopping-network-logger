@@ -28,22 +28,22 @@ namespace TwitchShoppingNetworkLogger.WebApi.Controllers
         }
 
         [HttpPut]
-        public async Task<string> Put()
+        public async Task<StatusCodeResult> Put()
         {
             try {
-                var request = await _authorizor.Authorize(Request.Headers);
+                var authorizedUser = await _authorizor.Authorize(Request.Headers);
 
-                LoggerManager.Instance.LogDebug("Received request.", request.Username);
-                if (!_auditorRegistry.HasRegisteredWhisperAuditor(request.Username))
-                    _auditorRegistry.RegisterNewWhisperAuditor(request.Username, request.Token, new ExcelWhisperRepository(_excelFileManager));
-                var auditor = _auditorRegistry.GetRegisteredWhisperAuditor(request.Username);
+                LoggerManager.Instance.LogDebug("Received request.", authorizedUser.Username);
+                if (!_auditorRegistry.HasRegisteredWhisperAuditor(authorizedUser.Username))
+                    _auditorRegistry.RegisterNewWhisperAuditor(authorizedUser.Username, authorizedUser.Token, new ExcelWhisperRepository(_excelFileManager));
+                var auditor = _auditorRegistry.GetRegisteredWhisperAuditor(authorizedUser.Username);
 
-                StartAuditing(request.Username, auditor);
-                return "Success";
+                StartAuditing(authorizedUser.Username, auditor);
+                return Ok();
             }
             catch (Exception e) {
                 LoggerManager.Instance.LogError("Unhandled error encountered.", e);
-                throw;
+                return StatusCode(500);
             }
         }
 
