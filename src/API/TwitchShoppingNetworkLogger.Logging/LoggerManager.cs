@@ -14,15 +14,19 @@ namespace Logging
             get
             {
                 if (_loggerInstance == null)
-                    _loggerInstance = ConstructTextLogger();
+                    _loggerInstance = ConstructLogger();
                 return _loggerInstance;
             }
         }
 
-        private static ILogger ConstructTextLogger()
+        private static ILogger ConstructLogger()
         {
-            Directory.CreateDirectory("logs");
-            return new TextLogger($"logs\\TSN_Log_{DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss")}.log");
+            Directory.CreateDirectory("D:\\home\\logs");
+            ILogger textLogger = new TextLogger($"D:\\home\\logs\\TSN_Log_{DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss")}.log");
+
+            ILogger traceLogger = new TraceLogger();
+ 
+            return new AggregateLogger(new [] { textLogger, traceLogger});
         }
     }
 }
