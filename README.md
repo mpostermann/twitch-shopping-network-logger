@@ -26,7 +26,7 @@ Regardless of the method, you'll need to provide a `Config.json` in the director
 
 The config should have the following format:
 
-```json
+```
 {
     "TwitchClientKey": String, // The access token to enable the bot to interact with Twitch (see "Generating an Access Token" below)
     "AuthorizedUsers": [String], // The list of users authorized to log messages
